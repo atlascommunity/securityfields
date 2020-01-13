@@ -1,0 +1,59 @@
+#attachmentmodule,
+#manage-attachments {
+    display: none;
+}
+
+#attachmentmodule dd.attachment-restriction {
+    padding-left: 10px;
+    padding-right: 5px !important;
+}
+
+#attachmentmodule dd.attachment-restriction.attachment-restriction-no-drop-menu {
+    padding-right: 18px !important;
+}
+
+#attachment_thumbnails li {
+    position: relative;
+}
+
+#attachmentmodule div.attachment-restriction {
+    position: absolute !important;
+    right: 10px;
+    padding-right: 0 !important;
+}
+
+.attachment-restriction a:hover .drop-menu:after {
+    border-top-color: #333333;
+}
+
+.attachment-restriction-unlock-hover {
+    visibility: hidden;
+}
+
+.attachment-content:hover .attachment-restriction-unlock-hover {
+    visibility: visible;
+}
+
+.attachment-restriction-hover {
+    background-color: #f0f0f0;
+}
+
+.attachment-restriction-hover .attachment-delete,
+.attachment-restriction-hover .attachment-restriction-unlock-hover {
+    visibility: visible !important;
+}
+
+#attachment-restriction-all {
+    min-width: 160px !important;
+    max-height: 450px;
+    overflow: auto;
+    z-index: 9999;
+}
+
+div.attachment-restriction[aria-owns="attachment-restriction-all"] {
+    margin-top: 10px;
+}
+
+div.attachment-restriction .attachment-restriction-current {
+    margin-left: 5px;
+}

@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>$action.getText("ru.atlasteam.jira.plugins.security.fields.configuration.title")</title>
+    <meta name="decorator" content="admin" />
+    <meta name="admin.active.section" content="admin_issues_menu/element_options_section/fields_section" />
+    <meta name="admin.active.tab" content="view_custom_fields" />
+    $webResourceManager.requireResource("jira.webresources:jira-fields") ## Group picker
+</head>
+<body>
+<h2>$action.getText( "ru.atlasteam.jira.plugins.security.fields.configuration.title" )</h2>
+
+<form class="aui" action="SecurityScheme.jspa" method="post">
+    <input type="hidden" name="atl_token" value="$atl_token" />
+    <input type="hidden" name="fieldConfigId" value="$fieldConfigId" />
+    <input type="hidden" name="returnUrl" value="$returnUrl" />
+    <div class="field-group aui-field-grouppicker">
+        <label for="allowedGroupNames">$action.getText("common.words.groups")</label>
+        #groupPicker( $action, "allowedGroupNames", "$!allowedGroupNames", true, $null, "max-width: 250px;" )
+    </div>
+    <div class="field-group">
+        <label for="allowedProjectRoleIds">$action.getText("common.words.project.roles")</label>
+        <select multiple="multiple" class="multi-select" id="allowedProjectRoleIds" name="allowedProjectRoleIds">
+            #foreach( $projectRole in $action.projectRoles )
+                <option value="$projectRole.left.id" #if( $projectRole.right )selected="selected"#end>$projectRole.left.name</option>
+            #end
+        </select>
+    </div>
+    <div class="buttons-container">
+        <div class="buttons">
+            <input type="submit" class="aui-button" value="$action.getText("common.words.save")" />
+            <a href="$returnUrl" class="aui-button aui-button-link">$action.getText("common.words.cancel")</a>
+        </div>
+    </div>
+</form>
+</body>
+</html>

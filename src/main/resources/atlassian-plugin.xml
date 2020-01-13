@@ -1,0 +1,94 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="atlassian-data-center-compatible">true</param>
+    </plugin-info>
+
+    <resource type="i18n" name="i18n" location="ru/atlasteam/jira/plugins/security/security"/>
+
+    <rest key="rest" path="/security" version="1.0"/>
+
+    <component-import key="ao" interface="com.atlassian.activeobjects.external.ActiveObjects" />
+    <ao key="ao-entities">
+        <entity>ru.atlasteam.jira.plugins.security.fields.SecurityScheme</entity>ъ
+        <entity>ru.atlasteam.jira.plugins.security.attachments.AttachmentRestriction</entity>
+    </ao>
+    
+    <!-- Fields -->
+    <component key="security-scheme-service" class="ru.atlasteam.jira.plugins.security.fields.SecuritySchemeServiceImpl" public="true">
+        <interface>ru.atlasteam.jira.plugins.security.fields.SecuritySchemeService</interface>
+    </component>
+
+    <webwork1 key="security-scheme-action" class="java.lang.Object" roles-required="admin">
+        <actions>
+            <action name="ru.atlasteam.jira.plugins.security.fields.SecuritySchemeAction" alias="SecurityScheme">
+                <view name="input">/ru/atlasteam/jira/plugins/security/fields/security-scheme-page.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <customfield-type key="secure-textfield" name="Secure Text Field (single line)" class="ru.atlasteam.jira.plugins.security.fields.SecureRenderableTextCFType">
+        <resource type="download" name="customfieldpreview.png" location="images/customfieldpreview/textfield.png">
+            <param name="source" value="webContextStatic"/>
+        </resource>
+
+        <resource type="velocity" name="view" location="templates/plugins/fields/view/view-basictext.vm"/>
+        <resource type="velocity" name="edit" location="ru/atlasteam/jira/plugins/security/fields/secure-field-edit.vm"/>
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm"/>
+    </customfield-type>
+
+    <customfield-type key="secure-float" name="Secure Number Field" class="ru.atlasteam.jira.plugins.security.fields.SecureNumberCFType">
+        <resource type="download" name="customfieldpreview.png" location="images/customfieldpreview/number.png">
+            <param name="source" value="webContextStatic"/>
+        </resource>
+
+        <resource type="velocity" name="view" location="templates/plugins/fields/view/view-number.vm"/>
+        <resource type="velocity" name="edit" location="ru/atlasteam/jira/plugins/security/fields/secure-field-edit.vm"/>
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-number.vm"/>
+    </customfield-type>
+
+    <customfield-type key="secure-select" name="Secure Select List (single choice)" class="ru.atlasteam.jira.plugins.security.fields.SecureSelectCFType">
+        <resource type="download" name="customfieldpreview.png" location="images/customfieldpreview/select.png">
+            <param name="source" value="webContextStatic"/>
+        </resource>
+
+        <resource type="velocity" name="view" location="templates/plugins/fields/view/view-select.vm"/>
+        <resource type="velocity" name="edit" location="ru/atlasteam/jira/plugins/security/fields/secure-field-edit.vm"/>
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-select.vm"/>
+    </customfield-type>
+
+    <!-- Attachments -->
+
+    <component key="attachment-restriction-manager" class="ru.atlasteam.jira.plugins.security.attachments.AttachmentRestrictionManager" />
+    <component key="backward-compatible-temporary-attachment-util" class="com.atlassian.jira.web.action.issue.util.BackwardCompatibleTemporaryAttachmentUtil" />
+    <component key="message-responder" class="com.atlassian.jira.web.action.message.MessageResponder" />
+    <component key="object-mapper" class="com.atlassian.adapter.jackson.ObjectMapper" />
+    <component key="popUp-message-factory" class="com.atlassian.jira.web.action.message.PopUpMessageFactory" />
+
+    <web-resource key="attachment-restriction">
+        <transformation extension="js">
+            <transformer key="jsI18n"/>
+        </transformation>
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="restriction.css" location="ru/atlasteam/jira/plugins/security/attachments/restriction.css" />
+        <resource type="download" name="restriction.js" location="ru/atlasteam/jira/plugins/security/attachments/restriction.js" />
+        <context>atl.general</context>
+    </web-resource>
+
+    <servlet-filter key="attachment-restriction-filter" class="ru.atlasteam.jira.plugins.security.attachments.AttachmentRestrictionFilter" location="before-dispatch" weight="200">
+        <url-pattern>/secure/attachment/*</url-pattern>
+        <url-pattern>/secure/attachmentzip/*</url-pattern>
+        <url-pattern>/secure/DeleteAttachment.jspa</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </servlet-filter>
+
+    <webwork1 key="attach-restricted-file-action" class="java.lang.Object" roles-required="use">
+        <actions>
+            <action name="ru.atlasteam.jira.plugins.security.attachments.SecurityAttachRestrictedFileAction" alias="SecurityAttachRestrictedFile" />
+        </actions>
+    </webwork1>
+    
+</atlassian-plugin>
